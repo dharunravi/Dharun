@@ -1,1 +1,37 @@
+#readings for motor
+import random as rd 
+from datetime import datetime as ad
+import time 
+import csv
 
+
+def data():
+    return{
+    "Time":ad.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "Temperature":round(rd.uniform(20,30)),
+    "Voltage":round(rd.uniform(2,3)),
+    "Current":round(rd.uniform(0.2,0.30),3)
+}
+for i in range (11):
+    with open ('sensor_data.csv',"a") as f:
+        c=csv.DictWriter(f, fieldnames=["Time", "Temperature", "Voltage", "Current"])
+        c.writerow(data())
+    time.sleep(2)    
+
+#for polt the data
+import pandas as pd 
+import matplotlib.pyplot as plt
+
+df=pd.read_csv('sensor_data.csv')
+print(df.head())
+print(df.describe())
+
+plt.plot(df['Voltage'],label="Voltage (V)", color='blue')
+plt.plot(df['Current'], label="Current (A)", color='green')
+plt.plot(df['Temperature'], label="temperature", color='yellow')
+plt.xlabel('Time')
+plt.ylabel('Value')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
